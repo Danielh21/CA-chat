@@ -10,5 +10,7 @@ package server;
  * @author rasmu
  */
 public class dummy {
-    
+    public static void main(String[] args) {
+        
+    }
 }
