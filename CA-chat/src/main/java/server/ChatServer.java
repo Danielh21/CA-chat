@@ -50,9 +50,9 @@ public class ChatServer {
     }
 
     public static synchronized void send(String message) {
-        for (ClientHandler client : clients) {
+        clients.stream().forEach((client) -> {
             client.send(message);
-        }
+        });
     }
 
     public static void stopServer() {
