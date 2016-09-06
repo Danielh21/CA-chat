@@ -1,5 +1,6 @@
 package server;
 
+import Log.Log;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -37,7 +38,7 @@ public class ClientHandler extends Thread {
     @Override
     public void run(){ 
     String msg = input.nextLine(); //IMPORTANT blocking call
-    Logger.getLogger(Log.LOG_NAME).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg));
+    Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg));
     while (!msg.equals("LOGOUT:")) { //has to be changed to actually use the protocol and NOT be hardcoded strings like this
 //        msg = protocol(msg);
 //        
@@ -47,7 +48,7 @@ public class ClientHandler extends Thread {
 //        
 //        Server.sendToAll(msg);
         
-      Logger.getLogger(Log.LOG_NAME).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg ));
+      Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg ));
       msg = input.nextLine(); //IMPORTANT blocking call
     }
     writer.println("connection ended");
@@ -55,9 +56,9 @@ public class ClientHandler extends Thread {
             s.close();
             ChatServer.removeHandler(this);
         } catch (IOException ex) {
-             Logger.getLogger(Log.LOG_NAME).log(Level.SEVERE,"Failed at closing for user " + username);
+             Logger.getLogger(Log.logName).log(Level.SEVERE,"Failed at closing for user " + username);
         }
-    Logger.getLogger(Log.LOG_NAME).log(Level.INFO,"Closed a Connection for user: " + username);
+    Logger.getLogger(Log.logName).log(Level.INFO,"Closed a Connection for user: " + username);
         
     }
     
