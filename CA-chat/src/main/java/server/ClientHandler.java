@@ -53,7 +53,7 @@ public class ClientHandler extends Thread {
     writer.println("connection ended");
         try {
             s.close();
-            Server.removeHandler(this);
+            ChatServer.removeHandler(this);
         } catch (IOException ex) {
              Logger.getLogger(Log.LOG_NAME).log(Level.SEVERE,"Failed at closing for user " + username);
         }
