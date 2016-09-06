@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server {
+public class Server1 {
 
     private static boolean keepRunning = true;
     private static ServerSocket serverSocket;
@@ -72,7 +72,7 @@ public class Server {
             int port = Integer.parseInt(args[1]);
             Log.setLogFile("logFile.txt", "ServerLog");
             Logger.getLogger(Log.LOG_NAME).log(Level.INFO, "Starting the Server");
-            new Server().runServer(ip, port);
+            new Server1().runServer(ip, port);
         } catch (Exception e) {
             Logger.getLogger(Log.LOG_NAME).log(Level.SEVERE, null, e);
         } finally {
