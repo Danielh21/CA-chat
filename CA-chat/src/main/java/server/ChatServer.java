@@ -56,6 +56,7 @@ public class ChatServer {
     }
 
     public static void stopServer() {
+        Log.closeLogger();
         keepRunning = false;
     }
 
