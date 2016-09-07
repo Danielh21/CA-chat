@@ -50,7 +50,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         ChatBox = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         textMessage = new javax.swing.JTextField();
-        send = new javax.swing.JButton();
+        sendBtn = new javax.swing.JButton();
         ipFld = new javax.swing.JTextField();
         portFld = new javax.swing.JTextField();
         connectBtn = new javax.swing.JButton();
@@ -73,24 +73,31 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         chatBoxSP.setViewportView(ChatBox);
 
         jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 3, 24)); // NOI18N
-        jLabel1.setText("CHAT Box:");
+        jLabel1.setText("CHATBOX");
 
         textMessage.setFont(new java.awt.Font("Century Schoolbook", 0, 12)); // NOI18N
 
-        send.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        send.setText("SEND");
-        send.addActionListener(new java.awt.event.ActionListener() {
+        sendBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        sendBtn.setText("SEND");
+        sendBtn.setToolTipText("Click to send message");
+        sendBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        sendBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sendActionPerformed(evt);
+                sendBtnActionPerformed(evt);
             }
         });
 
-        ipFld.setText("IP Address");
+        ipFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        ipFld.setText("127.0.0.1");
+        ipFld.setToolTipText("Enter IP address");
+        ipFld.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ipFld.setMaximumSize(new java.awt.Dimension(80, 20));
         ipFld.setMinimumSize(new java.awt.Dimension(80, 20));
         ipFld.setPreferredSize(new java.awt.Dimension(80, 20));
 
-        portFld.setText("Port");
+        portFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        portFld.setText("8080");
+        portFld.setToolTipText("Enter port");
         portFld.setMaximumSize(new java.awt.Dimension(10, 20));
         portFld.setMinimumSize(new java.awt.Dimension(10, 20));
         portFld.setPreferredSize(new java.awt.Dimension(40, 20));
@@ -103,8 +110,8 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
             }
         });
 
-        usernameFld.setText("Username");
-        usernameFld.setToolTipText("Username");
+        usernameFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        usernameFld.setToolTipText("Enter name");
 
         loginBtn.setText("Login");
         loginBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -140,7 +147,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(send))
+                                .addComponent(sendBtn))
                             .addComponent(chatBoxSP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(49, 49, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -173,7 +180,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                         .addGap(27, 27, 27)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(sendBtn)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ipFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -192,12 +199,12 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+    private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
         if (client != null) {
             List<String> users = userList.getSelectedValuesList();
             client.sendMessage(users, textMessage.getText());
         }
-    }//GEN-LAST:event_sendActionPerformed
+    }//GEN-LAST:event_sendBtnActionPerformed
 
     private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
         setConnection(ipFld.getText(), Integer.parseInt(portFld.getText()));
@@ -275,7 +282,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton loginBtn;
     private javax.swing.JButton logoutBtn;
     private javax.swing.JTextField portFld;
-    private javax.swing.JButton send;
+    private javax.swing.JButton sendBtn;
     private javax.swing.JTextField textMessage;
     private javax.swing.JList<String> userList;
     private javax.swing.JScrollPane userSP;
