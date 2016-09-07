@@ -7,14 +7,7 @@ import java.util.logging.Logger;
 
 public class Decoder {
 
-//    private String cmd;
-    private ArrayList<String> connectedUsers;
-    private String msg;
-    private String[] splitString;
     private String currentUser;
-
-    String result = "Unrecognized command!";
-    ArrayList<String> recipientsList;
 
     public Decoder() {
 
@@ -24,9 +17,9 @@ public class Decoder {
         String[] words = line.split(":");
         String cmd = words[0];
         try {
-            
+
             switch (cmd.toUpperCase()) {
-                
+
                 case "MSG":
                     ArrayList<String> recipients = new ArrayList<>();
                     String recipient = words[1];
@@ -46,13 +39,13 @@ public class Decoder {
                         ChatServer.sendToSomeClients(recipients, response);
                     }
                     break;
-                
+
                 default:
-                    Logger.getLogger(Log.logName).log(Level.INFO,"Syntax error: " + cmd);
+                    Logger.getLogger(Log.logName).log(Level.INFO, "Syntax error: " + cmd);
                     break;
             }
         } catch (Exception e) {
-            Logger.getLogger(Log.logName).log(Level.INFO,"Message not understood" + e);
+            Logger.getLogger(Log.logName).log(Level.INFO, "Message not understood" + e);
         }
     }
 
@@ -62,7 +55,6 @@ public class Decoder {
         System.out.println(mesRes);
         return mesRes;
     }
-
 
     public void setCurrentUserName(String username) {
         currentUser = username;
