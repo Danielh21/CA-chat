@@ -8,43 +8,47 @@ public class Decoder {
     private ArrayList<String> connectedUsers;
     private String msg;
     private String[] splitString;
-    
+    private String currentUser;
+
     String result;
     ArrayList<String> recipientsList;
 
     public Decoder() {
 
     }
-    
-    public void splitLine(String line){
+
+    public void splitLine(String line) {
         String[] words = line.split(":");
         String cmd = words[0];
-        
-        switch(cmd.toUpperCase()){
-            case "LOGIN":
-                String username = words[1];
-                //new client to connect
-                //send all the clients
-                break;
-                
+
+        switch (cmd.toUpperCase()) {
+
             case "MSG":
-                ArrayList<String> recipients = null;
+                ArrayList<String> recipients = new ArrayList<>();
                 String recipient = words[1];
                 String msg = words[2];
                 String[] list = recipient.split(",");
                 //add the list of recipients who will receive the message
-                for (int i = 0; i < list.length; i++) {
-                    recipients.add(list[i]);
+                if (list.length >= 1) {
+
+                    for (int i = 0; i < list.length; i++) {
+                        recipients.add(list[i].toUpperCase());
+                    }
                 }
-                sendMsg(recipients,msg);
+                String response = generateResponse(recipients, msg);
+                if (recipients.isEmpty()) {
+                    ChatServer.sendToAllClients(msg);
+                } else {
+                    ChatServer.sendToSomeClients(recipients, response);
+                }
                 break;
-                
+
             case "LOGOUT":
                 //check current user and close the connection
                 //send all the clients an update who loggedout
                 break;
-                
-            default: 
+
+            default:
                 result = "Unrecognized command!";
                 break;
         }
@@ -53,27 +57,20 @@ public class Decoder {
 //    public String getCmd() {
 //        return cmd;
 //    }
-
 //    private void login() {
 //        connectedUsers.add(splitString[1]);
 //        for (Object connectedUser : connectedUsers) {
 //            System.out.println(connectedUser.toString());
 //        }
 //    }
-
-    public String sendMsg(ArrayList<String> recipients, String msg) {
-        String mesRes="";
+    public String generateResponse(ArrayList<String> recipients, String msg) {
+        String mesRes = "";
         //check if the recipients is null, if null.. it needs to send to all
-        if(recipients==null){
-            for (String user : connectedUsers) {
-                recipients.add(user);
-            }
-        }
         //holding the recipients list in the recipients arrayList
-        for (String recipient : recipients) {
-            recipientsList.add(recipient);
-        }
-        mesRes = "MESRES:" + getUser() + ":" + msg;
+//        for (String recipient : recipients) {
+//            recipientsList.add(recipient);
+//        }
+        mesRes = "MSGRES:" + currentUser + ":" + msg;
         System.out.println(mesRes);
         return mesRes;
     }
@@ -82,13 +79,7 @@ public class Decoder {
 
     }
 
-    public String getUser() {
-        //It has to determine the username corresponds to that Thread
-        String currentUser = Thread.currentThread().getName();
-        return currentUser;
-    }
-    
-    public ArrayList<String> getRecipients(){
+    public ArrayList<String> getRecipients() {
         return recipientsList;
     }
 
@@ -98,4 +89,7 @@ public class Decoder {
 //        d.splitLine(line);
 //        System.out.println("Recipients:" + d.getRecipients());
 //    }
+    public void setCurrentUserName(String username) {
+        currentUser = username;
+    }
 }

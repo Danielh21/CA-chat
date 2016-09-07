@@ -17,11 +17,13 @@ public class ClientHandler extends Thread {
     boolean notLoggedin;
 //    Protocol protocol;
     String username;
+    Decoder decoder;
     
     public ClientHandler(Socket s) throws IOException{
         input = new Scanner (s.getInputStream());
         writer = new PrintWriter(s.getOutputStream(), true);
         this.s = s;
+        decoder = new Decoder();
     }
     
     public void sendToClient(String message){
@@ -39,6 +41,7 @@ public class ClientHandler extends Thread {
     @Override
     public void run(){
     userLogin();
+    decoder.setCurrentUserName(username);
     String msg = input.nextLine(); //IMPORTANT blocking call
     Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg));
     while (!msg.equals("LOGOUT:")) { //has to be changed to actually use the protocol and NOT be hardcoded strings like this
@@ -49,14 +52,16 @@ public class ClientHandler extends Thread {
 //        else
 //        
 //        Server.sendToAll(msg);
-        ChatServer.sendToAllClients(msg);
+//        ChatServer.sendToAllClients(msg);
+        decoder.splitLine(msg);
       Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg ));
       msg = input.nextLine(); //IMPORTANT blocking call
     }
     writer.println("connection ended");
         try {
-            s.close();
             ChatServer.removeHandler(this);
+            newUserLogedOn();
+            s.close();
         } catch (IOException ex) {
              Logger.getLogger(Log.logName).log(Level.SEVERE,"Failed at closing for user " + username);
         }

@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ public class ChatServer {
 
     private static boolean keepRunning = true;
     private static ServerSocket serverSocket;
+
     private String ip;
     private int port;
     public static CopyOnWriteArrayList<ClientHandler> clients;
@@ -62,6 +64,13 @@ public class ChatServer {
         });
     }
 
+    public static synchronized void sendToSomeClients(ArrayList<String> recipients, String response) {
+        for (ClientHandler client : clients) {
+            if(client.username != null && recipients.contains(client.getUsername())){
+                client.sendToClient(response);
+            }
+        }
+    }
     public static void stopServer() {
         Log.closeLogger();
         keepRunning = false;
