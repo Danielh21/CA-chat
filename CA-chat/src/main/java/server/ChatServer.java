@@ -24,18 +24,6 @@ public class ChatServer {
     public ChatServer() {
         clients = new CopyOnWriteArrayList<>();
     }
-    
-    
-
-    private static void handleClient(Socket socket) throws IOException {
-        Scanner input = new Scanner(socket.getInputStream());
-        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-
-        String message = input.nextLine(); //IMPORTANT blocking call
-        Logger.getLogger(Log.logName).log(Level.INFO, String.format("Received the message: %1$S ", message));
-        //protocol goes here
-
-    }
 
     private void runServer(String ip, int port) {
         this.port = port;
@@ -59,18 +47,20 @@ public class ChatServer {
 
     public static synchronized void sendToAllClients(String message) {
         clients.stream().forEach((client) -> {
-            if(client.username != null)
-            client.sendToClient(message);
+            if (client.username != null) {
+                client.sendToClient(message);
+            }
         });
     }
 
     public static synchronized void sendToSomeClients(ArrayList<String> recipients, String response) {
         for (ClientHandler client : clients) {
-            if(client.username != null && recipients.contains(client.getUsername())){
+            if (client.username != null && recipients.contains(client.getUsername())) {
                 client.sendToClient(response);
             }
         }
     }
+
     public static void stopServer() {
         Log.closeLogger();
         keepRunning = false;
@@ -98,4 +88,3 @@ public class ChatServer {
     }
 
 }
-
