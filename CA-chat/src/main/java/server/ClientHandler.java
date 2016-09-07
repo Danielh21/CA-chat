@@ -60,7 +60,7 @@ public class ClientHandler extends Thread {
     writer.println("connection ended");
         try {
             ChatServer.removeHandler(this);
-            newUserLogedOn();
+            activeClients();
             s.close();
         } catch (IOException ex) {
              Logger.getLogger(Log.logName).log(Level.SEVERE,"Failed at closing for user " + username);
@@ -70,7 +70,6 @@ public class ClientHandler extends Thread {
     }
 
     private void userLogin() {
-        writer.println("Hello and Welcome to the Chat server Please login");
         notLoggedin = true;
         String message;
         try {
@@ -81,23 +80,24 @@ public class ClientHandler extends Thread {
                 if (loginMessage[0].equals("LOGIN") && loginMessage.length == 2) {
                     notLoggedin = false;
                     username = loginMessage[1];
-                    newUserLogedOn();
+                    activeClients();
                 } else {
-                    writer.println("Syntax Error");
+                    Logger.getLogger(Log.logName).log(Level.INFO,"Failed login attempt");
                 }
                 
             } while (notLoggedin);
         } catch (Exception e) {
-            writer.println("Syntax Error");
+            Logger.getLogger(Log.logName).log(Level.INFO,"Failed login attempt");
         }
     }
 
-    private void newUserLogedOn() {
+    private void activeClients() {
         String output="CLIENTLIST:";
         for (ClientHandler handler : ChatServer.clients) {
             if(handler.username != null)
-            output = output + handler.username + ", ";
+            output = output + handler.username + ",";
         }
+        output = output.substring(0,output.length()-1);
         ChatServer.sendToAllClients(output);
     }
     

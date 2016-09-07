@@ -1,6 +1,9 @@
 package server;
 
+import Log.Log;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Decoder {
 
@@ -45,12 +48,11 @@ public class Decoder {
                     break;
                 
                 default:
+                    Logger.getLogger(Log.logName).log(Level.INFO,"Syntax error: " + cmd);
                     break;
             }
         } catch (Exception e) {
-            ArrayList<String> rec = new ArrayList<>();
-            rec.add(currentUser.toUpperCase());
-            ChatServer.sendToSomeClients(rec, result);
+            Logger.getLogger(Log.logName).log(Level.INFO,"Message not understood" + e);
         }
     }
 
