@@ -6,13 +6,13 @@ public class Decoder {
 
     private String cmd;
     private ArrayList connectedUsers;
+    private String msg;
+    private String[] splitString;
 
     public Decoder(String input) {
 
-        String[] splitString = input.split(":");
-
         if (splitString.length > 1) {
-
+            splitString = input.split(":");
             switch (splitString[0]) {
                 case "LOGIN":
                     login();
@@ -25,29 +25,23 @@ public class Decoder {
                     break;
                 default:
                     cmd = "SYNTAX ERROR";
-
             }
-
         }
-
     }
 
     public String getCmd() {
         return cmd;
     }
 
-    
-
     private void login() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        connectedUsers.add(splitString[1]);
     }
 
     private void sendMsg() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void logout() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }
