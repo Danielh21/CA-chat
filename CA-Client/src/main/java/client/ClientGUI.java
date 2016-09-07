@@ -3,6 +3,7 @@
  */
 package client;
 
+import java.net.InetAddress;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -10,17 +11,27 @@ import java.util.Observer;
  *
  * @author cherry
  */
-public class ClientGUI extends javax.swing.JFrame implements Observer{
+public class ClientGUI extends javax.swing.JFrame implements Observer {
+
     Client client;
     private static String address = "localhost";
     private static int port = 7777;
+
     /**
      * Creates new form ClientGUI
      */
+
+    public void setConnection(String address, int port) {
+        this.address = address;
+        this.port = port;
+    }
+
     public ClientGUI() {
         initComponents();
         client = new Client(this);
         client.addObserver(this);
+        Thread listThread = new Thread(new Listerner());
+        listThread.start();
     }
 
     /**
@@ -37,6 +48,9 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
         jLabel1 = new javax.swing.JLabel();
         textMessage = new javax.swing.JTextField();
         send = new javax.swing.JButton();
+        ipFld = new javax.swing.JTextField();
+        portFld = new javax.swing.JTextField();
+        connectBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,6 +72,25 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
             }
         });
 
+        ipFld.setText("IP Address");
+        ipFld.setMaximumSize(new java.awt.Dimension(80, 20));
+        ipFld.setMinimumSize(new java.awt.Dimension(80, 20));
+        ipFld.setPreferredSize(new java.awt.Dimension(80, 20));
+
+        portFld.setText("Port");
+        portFld.setMaximumSize(new java.awt.Dimension(10, 20));
+        portFld.setMinimumSize(new java.awt.Dimension(10, 20));
+        portFld.setPreferredSize(new java.awt.Dimension(40, 20));
+        portFld.setRequestFocusEnabled(false);
+
+        connectBtn.setText("Connect");
+        connectBtn.setActionCommand("Connect");
+        connectBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -66,13 +99,20 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(send))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(431, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(send))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(78, 78, 78)
+                        .addComponent(ipFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(connectBtn)))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,7 +120,12 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
                 .addGap(7, 7, 7)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ipFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(connectBtn)))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -94,6 +139,10 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
         client.send(textMessage.getText());
     }//GEN-LAST:event_sendActionPerformed
+
+    private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
+        setConnection(ipFld.getText(), Integer.parseInt(portFld.getText()));// TODO add your handling code here:
+    }//GEN-LAST:event_connectBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -122,14 +171,14 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
         }
         //</editor-fold>
         //</editor-fold>
-       
+
         try {
             address = args[0];
             port = Integer.parseInt(args[1]);
-        } catch ( ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No argument");
         }
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -140,8 +189,11 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea ChatBox;
+    private javax.swing.JButton connectBtn;
+    private javax.swing.JTextField ipFld;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField portFld;
     private javax.swing.JButton send;
     private javax.swing.JTextField textMessage;
     // End of variables declaration//GEN-END:variables
@@ -160,5 +212,14 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
     public static int getPort() {
         return port;
     }
-    
+
+    class Listerner implements Runnable {
+
+        @Override
+        public void run() {
+            client.listen();
+        }
+
+    }
+
 }

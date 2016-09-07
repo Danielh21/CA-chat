@@ -14,6 +14,7 @@ public class ClientHandler extends Thread {
     Scanner input;
     PrintWriter writer;
     Socket s;
+    boolean notLoggedin;
 //    Protocol protocol;
     String username;
     
@@ -23,7 +24,7 @@ public class ClientHandler extends Thread {
         this.s = s;
     }
     
-    public void send(String message){
+    public void sendToClient(String message){
         writer.println(message);
     }
 
@@ -36,18 +37,19 @@ public class ClientHandler extends Thread {
     }
     
     @Override
-    public void run(){ 
+    public void run(){
+    userLogin();
     String msg = input.nextLine(); //IMPORTANT blocking call
     Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg));
     while (!msg.equals("LOGOUT:")) { //has to be changed to actually use the protocol and NOT be hardcoded strings like this
 //        msg = protocol(msg);
 //        
-//        send(msg);//to who ? we should do a check if "to all" or "to specific"
-//        //right now send method sends to all.
+//        sendToClient(msg);//to who ? we should do a check if "to all" or "to specific"
+//        //right now sendToClient method sends to all.
 //        else
 //        
 //        Server.sendToAll(msg);
-        
+        ChatServer.sendToAllClients(msg);
       Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg ));
       msg = input.nextLine(); //IMPORTANT blocking call
     }
@@ -60,6 +62,38 @@ public class ClientHandler extends Thread {
         }
     Logger.getLogger(Log.logName).log(Level.INFO,"Closed a Connection for user: " + username);
         
+    }
+
+    private void userLogin() {
+        writer.println("Hello and Welcome to the Chat server Please login");
+        notLoggedin = true;
+        String message;
+        try {
+            do {
+                message = input.nextLine(); // Blocking Call
+                message = message.toUpperCase();
+                String[] loginMessage = message.split(":");
+                if (loginMessage[0].equals("LOGIN") && loginMessage.length == 2) {
+                    notLoggedin = false;
+                    username = loginMessage[1];
+                    newUserLogedOn();
+                } else {
+                    writer.println("Syntax Error");
+                }
+                
+            } while (notLoggedin);
+        } catch (Exception e) {
+            writer.println("Syntax Error");
+        }
+    }
+
+    private void newUserLogedOn() {
+        String output="CLIENTLIST:";
+        for (ClientHandler handler : ChatServer.clients) {
+            if(handler.username != null)
+            output = output + handler.username + ", ";
+        }
+        ChatServer.sendToAllClients(output);
     }
     
 }
