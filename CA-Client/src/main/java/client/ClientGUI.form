@@ -36,7 +36,7 @@
                       <Component id="jScrollPane1" alignment="0" min="-2" pref="406" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="21" max="32767" attributes="0"/>
+              <EmptySpace pref="431" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -98,6 +98,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="SEND"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sendActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

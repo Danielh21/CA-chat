@@ -52,6 +52,11 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
 
         send.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         send.setText("SEND");
+        send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -67,7 +72,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(send))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(431, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,6 +90,10 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        client.send(textMessage.getText());
+    }//GEN-LAST:event_sendActionPerformed
 
     /**
      * @param args the command line arguments
@@ -113,9 +122,13 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
         }
         //</editor-fold>
         //</editor-fold>
-
-        address = args[0];
-        port = Integer.parseInt(args[1]);
+       
+        try {
+            address = args[0];
+            port = Integer.parseInt(args[1]);
+        } catch ( ArrayIndexOutOfBoundsException e) {
+            System.out.println("No argument");
+        }
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -138,6 +151,14 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
         String msg = arg.toString();
         String hist = ChatBox.getText();
         ChatBox.setText(hist + "\n" + msg);
+    }
+
+    public static String getAddress() {
+        return address;
+    }
+
+    public static int getPort() {
+        return port;
     }
     
 }
