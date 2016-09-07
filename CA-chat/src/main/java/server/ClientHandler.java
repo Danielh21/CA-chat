@@ -60,7 +60,7 @@ public class ClientHandler extends Thread {
     }
 
     private void userLogin() {
-        loggedIn = true;
+        loggedIn = false;
         String message;
         try {
             do {
@@ -68,14 +68,14 @@ public class ClientHandler extends Thread {
                 message = message.toUpperCase();
                 String[] loginMessage = message.split(":");
                 if (loginMessage[0].equals("LOGIN") && loginMessage.length == 2) {
-                    loggedIn = false;
+                    loggedIn = true;
                     username = loginMessage[1];
                     activeClients();
                 } else {
                     Logger.getLogger(Log.logName).log(Level.INFO, "Failed login attempt");
                 }
 
-            } while (loggedIn);
+            } while (!loggedIn);
         } catch (Exception e) {
             Logger.getLogger(Log.logName).log(Level.INFO, "Failed login attempt");
         }
