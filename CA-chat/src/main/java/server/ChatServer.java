@@ -17,7 +17,7 @@ public class ChatServer {
     private static ServerSocket serverSocket;
     private String ip;
     private int port;
-    private static CopyOnWriteArrayList<ClientHandler> clients;
+    public static CopyOnWriteArrayList<ClientHandler> clients;
 
     public ChatServer() {
         clients = new CopyOnWriteArrayList<>();
@@ -55,8 +55,9 @@ public class ChatServer {
         }
     }
 
-    public static synchronized void send(String message) {
+    public static synchronized void sendToAllClients(String message) {
         clients.stream().forEach((client) -> {
+            if(client.username != null)
             client.sendToClient(message);
         });
     }
