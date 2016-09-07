@@ -52,7 +52,6 @@ public class Decoder {
     public String generateResponse(ArrayList<String> recipients, String msg) {
         String mesRes = "";
         mesRes = "MSGRES:" + currentUser + ":" + msg;
-        System.out.println(mesRes);
         return mesRes;
     }
 
