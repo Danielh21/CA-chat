@@ -53,7 +53,7 @@ public class Client extends Observable{
      
      public String receive() {
         message = input.nextLine(); // Blocking call
-        if (message.equals("LOGOUT")) {
+        if (message.equals("LOGOUT:")) {
             try {
                 socket.close();
             } catch (IOException ex) {
@@ -77,6 +77,6 @@ public class Client extends Observable{
            setChanged();
            notifyObservers(incommingMessage);
             
-        }while(!incommingMessage.equals("LOGOUT"));
+        }while(!incommingMessage.equals("LOGOUT:"));
     }
 }
