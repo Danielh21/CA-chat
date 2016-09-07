@@ -69,4 +69,14 @@ public class Client extends Observable{
      public boolean isStopped(){
          return stop;
      }
+
+    public void listen() {
+        String incommingMessage;
+        do{
+           incommingMessage = input.nextLine();
+           setChanged();
+           notifyObservers(incommingMessage);
+            
+        }while(!incommingMessage.equals("LOGOUT"));
+    }
 }

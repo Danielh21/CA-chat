@@ -20,7 +20,9 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
     public ClientGUI() {
         initComponents();
         client = new Client(this);
-        client.addObserver(this);
+        client.addObserver(this); 
+        Thread listThread = new Thread(new Listerner());
+        listThread.start();
     }
 
     /**
@@ -159,6 +161,15 @@ public class ClientGUI extends javax.swing.JFrame implements Observer{
 
     public static int getPort() {
         return port;
+    }
+    
+    class Listerner implements Runnable{
+
+        @Override
+        public void run() {
+            client.listen();
+        }
+        
     }
     
 }
