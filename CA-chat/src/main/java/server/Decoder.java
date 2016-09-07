@@ -35,6 +35,9 @@ public class Decoder {
 
     private void login() {
         connectedUsers.add(splitString[1]);
+        for (Object connectedUser : connectedUsers) {
+            System.out.println(connectedUser.toString());
+        }
     }
 
     private void sendMsg() {
