@@ -57,7 +57,7 @@ public class ChatServer {
 
     public static synchronized void send(String message) {
         clients.stream().forEach((client) -> {
-            client.send(message);
+            client.sendToClient(message);
         });
     }
 

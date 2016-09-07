@@ -23,7 +23,7 @@ public class ClientHandler extends Thread {
         this.s = s;
     }
     
-    public void send(String message){
+    public void sendToClient(String message){
         writer.println(message);
     }
 
@@ -42,12 +42,12 @@ public class ClientHandler extends Thread {
     while (!msg.equals("LOGOUT:")) { //has to be changed to actually use the protocol and NOT be hardcoded strings like this
 //        msg = protocol(msg);
 //        
-//        send(msg);//to who ? we should do a check if "to all" or "to specific"
-//        //right now send method sends to all.
+//        sendToClient(msg);//to who ? we should do a check if "to all" or "to specific"
+//        //right now sendToClient method sends to all.
 //        else
 //        
 //        Server.sendToAll(msg);
-        
+        ChatServer.send(msg);
       Logger.getLogger(Log.logName).log(Level.INFO,String.format("Received the message from "+username+": %1$S ", msg ));
       msg = input.nextLine(); //IMPORTANT blocking call
     }
