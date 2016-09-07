@@ -32,6 +32,10 @@ public class Decoder {
 
     }
 
+    public String getCmd() {
+        return cmd;
+    }
+
     
 
     private void login() {
