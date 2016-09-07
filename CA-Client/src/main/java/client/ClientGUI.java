@@ -4,8 +4,11 @@
 package client;
 
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -15,12 +18,11 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
 
     Client client;
     private static String address = "localhost";
-    private static int port = 7777;
+    private static int port = 8080;
 
     /**
      * Creates new form ClientGUI
      */
-
     public void setConnection(String address, int port) {
         this.address = address;
         this.port = port;
@@ -28,10 +30,11 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
 
     public ClientGUI() {
         initComponents();
-        client = new Client(this);
-        client.addObserver(this);
-        Thread listThread = new Thread(new Listerner());
-        listThread.start();
+        userList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        userList.setModel(userListModel);
+
+//        Thread listThread = new Thread(new Listerner());
+//        listThread.start();
     }
 
     /**
@@ -43,7 +46,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        chatBoxSP = new javax.swing.JScrollPane();
         ChatBox = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         textMessage = new javax.swing.JTextField();
@@ -51,13 +54,23 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         ipFld = new javax.swing.JTextField();
         portFld = new javax.swing.JTextField();
         connectBtn = new javax.swing.JButton();
+        usernameFld = new javax.swing.JTextField();
+        loginBtn = new javax.swing.JButton();
+        logoutBtn = new javax.swing.JButton();
+        userSP = new javax.swing.JScrollPane();
+        userList = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         ChatBox.setColumns(20);
         ChatBox.setFont(new java.awt.Font("Century Schoolbook", 0, 14)); // NOI18N
         ChatBox.setRows(5);
-        jScrollPane1.setViewportView(ChatBox);
+        chatBoxSP.setViewportView(ChatBox);
 
         jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 3, 24)); // NOI18N
         jLabel1.setText("CHAT Box:");
@@ -84,12 +97,35 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         portFld.setRequestFocusEnabled(false);
 
         connectBtn.setText("Connect");
-        connectBtn.setActionCommand("Connect");
         connectBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connectBtnActionPerformed(evt);
             }
         });
+
+        usernameFld.setText("Username");
+        usernameFld.setToolTipText("Username");
+
+        loginBtn.setText("Login");
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtnActionPerformed(evt);
+            }
+        });
+
+        logoutBtn.setText("Logout");
+        logoutBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutBtnActionPerformed(evt);
+            }
+        });
+
+        userList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        userSP.setViewportView(userList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -105,14 +141,25 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                                 .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(send))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(78, 78, 78)
-                        .addComponent(ipFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(connectBtn)))
-                .addContainerGap(124, Short.MAX_VALUE))
+                            .addComponent(chatBoxSP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(49, 49, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ipFld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(usernameFld))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(portFld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(connectBtn))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(loginBtn)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(logoutBtn))))
+                            .addComponent(userSP, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addContainerGap(159, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,28 +168,60 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ipFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(connectBtn)))
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(chatBoxSP, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ipFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(connectBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(loginBtn)
+                            .addComponent(logoutBtn))
+                        .addGap(18, 18, 18)
+                        .addComponent(userSP, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
-        client.send(textMessage.getText());
+        if (client != null) {
+            List<String> users = userList.getSelectedValuesList();
+            client.sendMessage(users, textMessage.getText());
+        }
     }//GEN-LAST:event_sendActionPerformed
 
     private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
-        setConnection(ipFld.getText(), Integer.parseInt(portFld.getText()));// TODO add your handling code here:
+        setConnection(ipFld.getText(), Integer.parseInt(portFld.getText()));
     }//GEN-LAST:event_connectBtnActionPerformed
+
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        client = new Client(ipFld.getText(), Integer.parseInt(portFld.getText()), new Listerner());
+        client.addObserver(this);
+        client.sendLogin(usernameFld.getText());
+    }//GEN-LAST:event_loginBtnActionPerformed
+
+    private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        if (client != null) {
+            client.sendLogout();
+            userListModel.clear();
+            client = null;
+        }
+    }//GEN-LAST:event_logoutBtnActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (client != null) {
+            client.sendLogout();        // When X is pressed
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -189,20 +268,54 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea ChatBox;
+    private javax.swing.JScrollPane chatBoxSP;
     private javax.swing.JButton connectBtn;
     private javax.swing.JTextField ipFld;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton loginBtn;
+    private javax.swing.JButton logoutBtn;
     private javax.swing.JTextField portFld;
     private javax.swing.JButton send;
     private javax.swing.JTextField textMessage;
+    private javax.swing.JList<String> userList;
+    private javax.swing.JScrollPane userSP;
+    private javax.swing.JTextField usernameFld;
     // End of variables declaration//GEN-END:variables
+
+    private DefaultListModel<String> userListModel = new DefaultListModel<>();
 
     @Override
     public void update(Observable o, Object arg) {
         String msg = arg.toString();
-        String hist = ChatBox.getText();
-        ChatBox.setText(hist + "\n" + msg);
+        dispatchMsg(msg);
+    }
+
+    private void dispatchMsg(String msg) { // diispatches the message to onMsg or onClienList, and does nothing if the command is not rocognized
+        String[] words = msg.split(":");
+        switch (words[0]) {
+
+            case "MSGRES":
+                onMsg(words[1], words[2]);
+                break;
+            case "CLIENTLIST":
+                onClientList(words[1]);
+                break;
+        }
+    }
+
+    private void onMsg(String from, String msg) { //apends the new recieved message to chatbox, only callen from handleMessage when "MSGRES"
+        ChatBox.append("\n");
+        ChatBox.append(from);
+        ChatBox.append(": ");
+        ChatBox.append(msg);
+    }
+
+    private void onClientList(String msg) { //saperates users by "," and add them the the userListModel one by one.
+        String[] users = msg.split(",");
+        userListModel.clear();
+        for (String user : users) {
+            userListModel.addElement(user);
+        }
     }
 
     public static String getAddress() {
