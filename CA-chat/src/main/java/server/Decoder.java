@@ -70,9 +70,7 @@ public class Decoder {
             }
         }
         //holding the recipients list in the recipients arrayList
-        for (String recipient : recipients) {
-            recipientsList.add(recipient);
-        }
+
         mesRes = "MESRES:" + getUser() + ":" + msg;
         System.out.println(mesRes);
         return mesRes;
