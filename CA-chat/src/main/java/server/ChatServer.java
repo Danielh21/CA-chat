@@ -19,6 +19,12 @@ public class ChatServer {
     private int port;
     private static CopyOnWriteArrayList<ClientHandler> clients;
 
+    public ChatServer() {
+        clients = new CopyOnWriteArrayList<>();
+    }
+    
+    
+
     private static void handleClient(Socket socket) throws IOException {
         Scanner input = new Scanner(socket.getInputStream());
         PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);

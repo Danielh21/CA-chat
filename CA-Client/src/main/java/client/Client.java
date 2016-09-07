@@ -23,13 +23,13 @@ public class Client extends Observable{
     private Scanner input;
     private PrintWriter output;
     private Boolean stop;
-    private ClientGUI gui;
     private String ip;
     private String message;
     
     Client(ClientGUI gui){
-        this.gui = gui;
         //get port and ip from the gui
+        port = ClientGUI.getPort();
+        ip = ClientGUI.getAddress();
         connect(ip,port);
     }
 
