@@ -13,7 +13,7 @@ public class Decoder {
 
     }
 
-    public void splitLine(String line) {
+    public void splitLine(String line) { //should be renamed to messageHandler
         String[] words = line.split(":");
         String cmd = words[0];
         try {
