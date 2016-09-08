@@ -40,12 +40,20 @@ public class ClientHandler extends Thread {
     public void run() {
         userLogin();
         decoder.setCurrentUserName(username);
-        String msg = input.nextLine(); //IMPORTANT blocking call
-        Logger.getLogger(Log.logName).log(Level.INFO, String.format("Received the message from " + username + ": %1$S ", msg));
-        while (!msg.equals("LOGOUT:")) {
-            decoder.splitLine(msg);
-            Logger.getLogger(Log.logName).log(Level.INFO, String.format("Received the message from " + username + ": %1$S ", msg));
-            msg = input.nextLine(); //IMPORTANT blocking call
+        String msg;
+        //String msg = input.nextLine(); //IMPORTANT blocking call
+        //Logger.getLogger(Log.logName).log(Level.INFO, String.format("Received the message from " + username + ": %1$S ", msg));
+        try {
+            do {
+                msg = input.nextLine(); //IMPORTANT blocking call
+                decoder.splitLine(msg);
+                Logger.getLogger(Log.logName).log(Level.INFO, String.format("Received the message from " + username + ": %1$S ", msg));
+            } while (!msg.equals("LOGOUT:"));
+        } catch (Exception e) {
+            Logger.getLogger(Log.logName).log(Level.INFO, String.format("Connection lost for: " + username));
+            ChatServer.removeHandler(this);
+            activeClients();
+            return ;
         }
         writer.println("connection ended");
         try {
