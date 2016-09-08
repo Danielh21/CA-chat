@@ -12,9 +12,9 @@ import server.ChatServer;
  *
  * @author cherr
  */
-public class ServerTest {
+public class ChatServerTest {
     
-    public ServerTest() {
+    public ChatServerTest() {
     }
     
     @BeforeClass
