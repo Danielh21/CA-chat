@@ -100,6 +100,10 @@ public class Client extends Observable {
     public boolean isStopped() {
         return stop;
     }
+    
+    public boolean isConnected(){
+        return connected;
+    }
 
     public void listen() {
         String incommingMessage;
