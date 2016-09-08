@@ -304,6 +304,13 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         dispatchMsg(msg);
     }
 
+    /**
+     * Takes a string and checks with the protocol, then calls either:
+     * onMsg(words[1], words[2]) or 
+     * onClientList(words[1]) or nothing.
+     * @param msg the command line arguments
+     * @author Rasmus
+     */
     private void dispatchMsg(String msg) { // diispatches the message to onMsg or onClienList, and does nothing if the command is not rocognized
         String[] words = msg.split(":");
         switch (words[0]) {
@@ -316,7 +323,13 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                 break;
         }
     }
-
+    
+    /**
+     * Takes two Strings and appends them to the ChatBox. always starting with a new line
+     * @param from is the username of the sender
+     * @param msg is the message sent
+     * @author Rasmus
+     */
     private void onMsg(String from, String msg) { //apends the new recieved message to chatbox, only callen from handleMessage when "MSGRES"
         ChatBox.append("\n");
         ChatBox.append(from);
@@ -324,6 +337,12 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         ChatBox.append(msg);
     }
 
+    /**
+     * This method will decode one string in to separate strings by splitting on "," then put the strings in a string array.
+     * Then clear userListModel, then each user (string) is added the the userListModel.
+     * @param msg is the list of users as one string.
+     * @author Rasmus
+     */
     private void onClientList(String msg) { //saperates users by "," and add them the the userListModel one by one.
         String[] users = msg.split(",");
         userListModel.clear();
