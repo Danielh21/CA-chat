@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class ChatServer {
 
-    private static boolean keepRunning = true;
+    public static boolean keepRunning = true;
     private static ServerSocket serverSocket;
 
     private String ip;
@@ -25,7 +25,7 @@ public class ChatServer {
         clients = new CopyOnWriteArrayList<>();
     }
 
-    private void runServer(String ip, int port) {
+    public void runServer(String ip, int port) {
         this.port = port;
         this.ip = ip;
 
