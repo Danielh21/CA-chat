@@ -60,6 +60,8 @@ public class Client extends Observable {
         
     }
 
+    String hej;
+    
     private void send(String msg) {
         if(socket == null){
             return;
