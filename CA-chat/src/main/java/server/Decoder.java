@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 public class Decoder {
 
     private String currentUser;
+    ArrayList<String> recipients;
+    String mesRes;
 
     public Decoder() {
 
@@ -21,7 +23,7 @@ public class Decoder {
             switch (cmd.toUpperCase()) {
 
                 case "MSG":
-                    ArrayList<String> recipients = new ArrayList<>();
+                    recipients = new ArrayList<>();
                     String recipient = words[1];
                     String msg = words[2];
                     String[] list = recipient.split(",");
@@ -51,12 +53,24 @@ public class Decoder {
     }
 
     public String generateResponse(ArrayList<String> recipients, String msg) {
-        String mesRes = "";
+        mesRes = "";
         mesRes = "MSGRES:" + currentUser + ":" + msg;
         return mesRes;
     }
 
     public void setCurrentUserName(String username) {
         currentUser = username;
+    }
+//Unit test
+    public ArrayList<String> getList() {
+        return recipients;
+    }
+    
+    public String getUsername(){
+        return currentUser.toUpperCase();
+    }
+    
+    public String getMesRes(){
+        return mesRes;
     }
 }
