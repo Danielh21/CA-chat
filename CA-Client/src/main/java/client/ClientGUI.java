@@ -213,6 +213,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
     client.sendLogin(usernameFld.getText());
+    loginBtn.setEnabled(false);
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
@@ -220,6 +221,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
             client.sendLogout();
             userListModel.clear();
             connectBtn.setEnabled(true);
+            loginBtn.setEnabled(true);
             client = null;
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
