@@ -59,8 +59,6 @@ public class Client extends Observable {
         notifyObservers(s);
         
     }
-
-    
     
     private void send(String msg) {
         if(socket == null){
