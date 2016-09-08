@@ -53,12 +53,7 @@ public class Client extends Observable {
         
     }
     
-    public void sendConnectedToGUI(String s){
-        s = "##"+s;
-        setChanged();
-        notifyObservers(s);
-        
-    }
+    
 
     String hej;
     
