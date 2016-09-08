@@ -9,6 +9,7 @@ public class Decoder {
 
     private String currentUser;
     ArrayList<String> recipients;
+    String mesRes;
 
     public Decoder() {
 
@@ -52,7 +53,7 @@ public class Decoder {
     }
 
     public String generateResponse(ArrayList<String> recipients, String msg) {
-        String mesRes = "";
+        mesRes = "";
         mesRes = "MSGRES:" + currentUser + ":" + msg;
         return mesRes;
     }
@@ -63,5 +64,13 @@ public class Decoder {
 //Unit test
     public ArrayList<String> getList() {
         return recipients;
+    }
+    
+    public String getUsername(){
+        return currentUser.toUpperCase();
+    }
+    
+    public String getMesRes(){
+        return mesRes;
     }
 }

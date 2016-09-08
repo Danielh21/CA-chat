@@ -35,16 +35,6 @@ public class ChatServerTest {
                 server.main(args);
             }
         }).start();
-//        c = new Client(ip,port,
-//        new Runnable(){
-//            @Override
-//            public void run() {
-//                String[] args = new String[2];
-//                args[0] = ip;
-//                args[1] = portString;
-//                ChatServer.main(args);
-//            }
-//        });
     }
 
     @AfterClass
@@ -83,15 +73,4 @@ public class ChatServerTest {
         assertEquals(false, c2.isConnected());
     }
 
-//    
-//    @Test
-//    public void runServerThruMainTest(){
-//        String[] args = new String[2];
-//        args[0] = "localhost";
-//        args[1] = "7777";
-//        ChatServer.main(args);
-//        assertTrue(ChatServer.keepRunning);
-//    }
-//    @Test
-//    public void 
 }

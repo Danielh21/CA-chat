@@ -1,10 +1,6 @@
 
 
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import server.Decoder;
@@ -16,29 +12,31 @@ import server.Decoder;
 public class ProtocolTest {
     
     Decoder d;
+    String inputMessage = "MSG:User1,User2:This is just a test.";
     
     public ProtocolTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-        
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
 
     @Test
     public void getRecipientsListTest(){
         d = new Decoder();
-        String inputMessage = "MSG:User1,User2:This is a test for some recipients.";
+        d.setCurrentUserName("USER0");
         d.splitLine(inputMessage);
         ArrayList<String> expectedRecipients = new ArrayList<>();
-//        expectedRecipients.add();
-        expectedRecipients.add("User1");
-        expectedRecipients.add("User2");
+        expectedRecipients.add(d.getUsername());
+        expectedRecipients.add("USER1");
+        expectedRecipients.add("USER2");
         assertEquals(expectedRecipients,d.getList());
-
+    }
+    
+    @Test
+    public void generateResponseTest(){
+        String expectedResponse = "MSGRES:User1:This is just a test.";
+        d = new Decoder();
+        d.setCurrentUserName("User1");
+        d.splitLine(inputMessage);
+        String result=d.getMesRes();
+        assertEquals(expectedResponse,result);
     }
 }
