@@ -58,9 +58,10 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         loginBtn = new javax.swing.JButton();
         logoutBtn = new javax.swing.JButton();
         userSP = new javax.swing.JScrollPane();
-        userList = new javax.swing.JList<>();
+        userList = new javax.swing.JList<String>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Awesome Chat Client");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -127,10 +128,10 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
             }
         });
 
-        userList.setModel(new javax.swing.AbstractListModel<String>() {
+        userList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            public Object getElementAt(int i) { return strings[i]; }
         });
         userSP.setViewportView(userList);
 
