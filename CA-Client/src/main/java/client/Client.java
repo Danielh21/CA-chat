@@ -53,9 +53,14 @@ public class Client extends Observable {
         
     }
     
-    
+    public void sendConnectedToGUI(String s){
+        s = "##"+s;
+        setChanged();
+        notifyObservers(s);
+        
+    }
 
-    String hej;
+    
     
     private void send(String msg) {
         if(socket == null){
