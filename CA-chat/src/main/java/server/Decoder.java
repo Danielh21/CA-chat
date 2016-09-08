@@ -39,7 +39,8 @@ public class Decoder {
                         ChatServer.sendToSomeClients(recipients, response);
                     }
                     break;
-
+                case "LOGOUT":
+                    break;
                 default:
                     Logger.getLogger(Log.logName).log(Level.INFO, "Syntax error: " + cmd);
                     break;
