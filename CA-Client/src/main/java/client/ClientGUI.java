@@ -22,9 +22,10 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     /**
      * Creates new form ClientGUI
      */
-    public void setConnection(String address, int port) {
-        this.address = address;
-        this.port = port;
+    public void doConnect() {
+        client = new Client();
+        client.addObserver(this);
+        new Thread(new Connector()).start();
     }
 
     public ClientGUI() {
@@ -202,23 +203,23 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         if (client != null) {
             List<String> users = userList.getSelectedValuesList();
             client.sendMessage(users, textMessage.getText());
+            textMessage.setText("");
         }
     }//GEN-LAST:event_sendBtnActionPerformed
 
     private void connectBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectBtnActionPerformed
-        setConnection(ipFld.getText(), Integer.parseInt(portFld.getText()));
+        doConnect();
     }//GEN-LAST:event_connectBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        client = new Client(ipFld.getText(), Integer.parseInt(portFld.getText()), new Listerner());
-        client.addObserver(this);
-        client.sendLogin(usernameFld.getText());
+    client.sendLogin(usernameFld.getText());
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
         if (client != null) {
             client.sendLogout();
             userListModel.clear();
+            connectBtn.setEnabled(true);
             client = null;
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
@@ -293,6 +294,10 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         String msg = arg.toString();
+        if(msg.substring(0, 2).equals("##")){
+            ChatBox.append(msg + "\n");
+            return;
+        }
         dispatchMsg(msg);
     }
 
@@ -338,7 +343,23 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         public void run() {
             client.listen();
         }
+        
 
     }
+     class Connector implements Runnable{
+
+            @Override
+            public void run() {
+                try {
+                 boolean connected = client.connectToServer(ipFld.getText(), Integer.parseInt(portFld.getText()), new Listerner());
+                 if(connected){
+                     connectBtn.setEnabled(false);
+                 }
+                } catch (NumberFormatException numberFormatException) {
+                    ChatBox.append("Pass a number in the Port \n");
+                }
+            }
+         
+     }
 
 }

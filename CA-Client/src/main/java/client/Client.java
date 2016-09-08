@@ -30,22 +30,40 @@ public class Client extends Observable {
     private String message;
     private boolean connected = true;
 
-    Client(String ip, int port, Runnable listener) {
+    Client() {
+        
+    }
+    
+    public boolean connectToServer(String ip, int port, Runnable listener){
         try {
             serverAddress = InetAddress.getByName(ip);
             socket = new Socket();
             socket.connect(new InetSocketAddress(serverAddress, port));
             input = new Scanner(socket.getInputStream());
             output = new PrintWriter(socket.getOutputStream(), true);  //Set to true, to get auto flush behaviour
-            Thread listThread = new Thread(listener);
-            listThread.start();
+            new Thread(listener).start();
             stop = false;
+            sendConnectedToGUI("Connected to " + socket.getInetAddress().toString() + " Please Login:");
+            return true;
         } catch (Exception ex) {
+            sendConnectedToGUI("Connection to " + ip + ":" + port + " Failed");
             System.out.println("ERROR:" + ex);
+            return false;
         }
+        
+    }
+    
+    public void sendConnectedToGUI(String s){
+        s = "##"+s;
+        setChanged();
+        notifyObservers(s);
+        
     }
 
     private void send(String msg) {
+        if(socket == null){
+            return;
+        }
         if (socket.isConnected()) {
             output.println(msg);
         }
