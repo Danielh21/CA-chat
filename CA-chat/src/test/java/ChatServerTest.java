@@ -61,7 +61,7 @@ public class ChatServerTest {
         assertEquals("CLIENTLIST:FEDTMULE,MICKEY", c1.receive());
         assertEquals("CLIENTLIST:FEDTMULE,MICKEY", c2.receive());
         c1.sendLogout();
-        Thread.sleep(500); /*we cannot synchronize between client and server. 
+        Thread.sleep(1000); /*we cannot synchronize between client and server. 
         we DONT assume that list is updated "same time" as client sends logout.
         We wait 0,5 sec for the server to update before we do the final check*/
         assertEquals(1, server.clients.size());

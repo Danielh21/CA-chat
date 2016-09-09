@@ -21,10 +21,8 @@ public class ProtocolTest {
     @Test
     public void getRecipientsListTest(){
         d = new Decoder();
-        d.setCurrentUserName("USER0");
         d.splitLine(inputMessage);
         ArrayList<String> expectedRecipients = new ArrayList<>();
-        expectedRecipients.add(d.getUsername());
         expectedRecipients.add("USER1");
         expectedRecipients.add("USER2");
         assertEquals(expectedRecipients,d.getList());

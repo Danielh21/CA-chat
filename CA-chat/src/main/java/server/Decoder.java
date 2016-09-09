@@ -29,7 +29,6 @@ public class Decoder {
                     String[] list = recipient.split(",");
                     //add the list of recipients who will receive the message
                     if (!recipient.equals("") && list.length >= 1) {
-                        recipients.add(currentUser);
                         for (int i = 0; i < list.length; i++) {
                             recipients.add(list[i].toUpperCase());
                         }
