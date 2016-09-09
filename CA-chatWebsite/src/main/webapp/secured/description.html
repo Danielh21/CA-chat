@@ -67,6 +67,25 @@ and open the template in the editor.
         
         <h4 align="left">DESIGN DESCRIPTION</h4>
         We created three projects: the server, client and the Web, following the protocol designed as an implementation. 
+        
+        <h5>Server design:</h5>
+        When the server starts, it will look for incomming connections from clients
+        using the accept method. When a client connects, it will start a new thread
+        for handling that client. That thread is called Clienthandler. The
+        clienthandler is in-charged for receiving messages from the client
+        and by the help form the helperclass decoder, decoding the message
+        using the protocol.
+        
+        <h5>Client design:</h5>
+        The GUI client uses an observer pattern with the Client.java file, so
+        that each GUI instance have a Client instance that listens for incomming
+        messages from the server, and notifies the GUI, when a message is received.
+        The GUI also starts a new thread for trying to connect to a server. 
+        
+        <h5>Web Application design:</h5>
+        We have used form based authentication for securing our web-project and
+        documentation, and the form based authentication used the users set in the
+        tomcat-users.xml file. 
         <br>
         
         <h4 align="center">TASK ASSIGNMENTS</h4>
@@ -83,6 +102,11 @@ and open the template in the editor.
                 <td></td>
                 <td>Chat Server class</td>
                 <td>All</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Log</td>
+                <td>Daniel</td>
             </tr>
             <tr>
                 <td></td>
