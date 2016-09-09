@@ -3,6 +3,7 @@
  */
 package client;
 
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -18,6 +19,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     Client client;
     private static String address = "localhost";
     private static int port = 8080;
+    private String activeUser;
 
     /**
      * Creates new form ClientGUI
@@ -59,6 +61,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
         logoutBtn = new javax.swing.JButton();
         userSP = new javax.swing.JScrollPane();
         userList = new javax.swing.JList<String>();
+        usernameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Awesome Chat Client");
@@ -150,23 +153,29 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(sendBtn))
                             .addComponent(chatBoxSP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(49, 49, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(49, 49, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(usernameFld, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
-                                    .addComponent(ipFld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(connectBtn))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(loginBtn)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(usernameFld, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                                            .addComponent(ipFld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(logoutBtn))))
-                            .addComponent(userSP, javax.swing.GroupLayout.Alignment.TRAILING))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(portFld, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(connectBtn))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(loginBtn)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(logoutBtn))))
+                                    .addComponent(userSP, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(75, 75, 75)
+                                .addComponent(usernameLabel)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap(147, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -193,7 +202,9 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
                             .addComponent(loginBtn)
                             .addComponent(logoutBtn))
                         .addGap(18, 18, 18)
-                        .addComponent(userSP, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(userSP, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(usernameLabel)))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
@@ -203,8 +214,18 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
         if (client != null) {
             List<String> users = userList.getSelectedValuesList();
+            if(!users.isEmpty()){
+                StringWriter sw = new StringWriter();
+                sw.write("MSGRES:");
+                sw.write(activeUser.toUpperCase());
+                sw.write(":");
+                sw.write(textMessage.getText());
+                dispatchMsg(sw.toString());
+                
+            }
             client.sendMessage(users, textMessage.getText());
             textMessage.setText("");
+            userList.clearSelection();
         }
     }//GEN-LAST:event_sendBtnActionPerformed
 
@@ -214,6 +235,9 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
     client.sendLogin(usernameFld.getText());
+    activeUser = usernameFld.getText();
+    usernameFld.setText("");
+    usernameLabel.setText("You are: " + activeUser );
     loginBtn.setEnabled(false);
     }//GEN-LAST:event_loginBtnActionPerformed
 
@@ -224,6 +248,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
             connectBtn.setEnabled(true);
             loginBtn.setEnabled(true);
             client = null;
+            usernameLabel.setText("");
         }
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -290,6 +315,7 @@ public class ClientGUI extends javax.swing.JFrame implements Observer {
     private javax.swing.JList<String> userList;
     private javax.swing.JScrollPane userSP;
     private javax.swing.JTextField usernameFld;
+    private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
 
     private DefaultListModel<String> userListModel = new DefaultListModel<>();
